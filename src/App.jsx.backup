@@ -1,0 +1,579 @@
+import { useState, useEffect } from 'react'
+import './App.css'
+
+// حفظ واسترجاع البيانات من localStorage
+const useLocalStorage = (key, initialValue) => {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key)
+      return item ? JSON.parse(item) : initialValue
+    } catch (error) {
+      console.error(error)
+      return initialValue
+    }
+  })
+
+  const setValue = (value) => {
+    try {
+      setStoredValue(value)
+      window.localStorage.setItem(key, JSON.stringify(value))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  return [storedValue, setValue]
+}
+
+export default function QittahApp() {
+  // الحالات الرئيسية
+  const [people, setPeople] = useLocalStorage('qittah-people', [])
+  const [dishes, setDishes] = useLocalStorage('qittah-dishes', [])
+  const [assignments, setAssignments] = useLocalStorage('qittah-assignments', {})
+  
+  // حالات الإدخال المؤقتة
+  const [newPerson, setNewPerson] = useState('')
+  const [newDish, setNewDish] = useState({ name: '', price: '', quantity: 1, currency: 'SAR' })
+  const [selectedPeople, setSelectedPeople] = useState({})
+  
+  // حساب النتائج
+  const calculateTotals = () => {
+    const totals = {}
+    
+    Object.entries(assignments).forEach(([person, dishIds]) => {
+      totals[person] = 0
+      
+      dishIds.forEach(dishId => {
+        const dish = dishes.find(d => d.id === dishId)
+        if (dish) {
+          const assignedTo = Object.entries(assignments)
+            .filter(([_, ids]) => ids.includes(dishId))
+            .length
+          
+          totals[person] += (dish.price * dish.quantity) / assignedTo
+        }
+      })
+    })
+    
+    return totals
+  }
+  
+  const totals = calculateTotals()
+  
+  // إضافة شخص جديد
+  const addPerson = () => {
+    const trimmedName = newPerson.trim()
+    if (!trimmedName) return
+    if (people.length >= 15) {
+      alert('لا يمكن إضافة أكثر من 15 شخصًا')
+      return
+    }
+    if (people.includes(trimmedName)) {
+      alert('هذا الشخص موجود مسبقًا')
+      setNewPerson('')
+      return
+    }
+    setPeople([...people, trimmedName])
+    setAssignments({...assignments, [trimmedName]: []})
+    setNewPerson('')
+  }
+  
+  // حذف شخص
+  const deletePerson = (personToDelete) => {
+    if (confirm(`هل أنت متأكد من حذف "${personToDelete}"؟`)) {
+      const newPeople = people.filter(p => p !== personToDelete)
+      setPeople(newPeople)
+      
+      const newAssignments = { ...assignments }
+      delete newAssignments[personToDelete]
+      setAssignments(newAssignments)
+    }
+  }
+  
+  // إضافة طبق جديد
+  const addDish = () => {
+    if (newDish.name.trim() && newDish.price) {
+      let priceInSAR = parseFloat(newDish.price)
+      if (priceInSAR <= 0) {
+        alert('السعر يجب أن يكون أكبر من صفر')
+        return
+      }
+      if (newDish.currency === 'KWD') {
+        // تحويل الدينار الكويتي إلى ريال سعودي (1 دينار ≈ 12 ريال)
+        priceInSAR = priceInSAR * 12
+      }
+      const quantity = parseInt(newDish.quantity)
+      if (quantity <= 0) {
+        alert('الكمية يجب أن تكون أكبر من صفر')
+        return
+      }
+      const dish = {
+        id: Date.now(),
+        name: newDish.name.trim(),
+        price: priceInSAR,
+        quantity: quantity,
+        originalCurrency: newDish.currency,
+        originalPrice: parseFloat(newDish.price)
+      }
+      setDishes([...dishes, dish])
+      setNewDish({ name: '', price: '', quantity: 1, currency: 'SAR' })
+    }
+  }
+  
+  // حذف طبق
+  const deleteDish = (dishIdToDelete) => {
+    if (confirm('هل أنت متأكد من حذف هذا الطبق؟')) {
+      const newDishes = dishes.filter(d => d.id !== dishIdToDelete)
+      setDishes(newDishes)
+      
+      // إزالة الطبق من جميع التعيينات
+      const newAssignments = {}
+      Object.entries(assignments).forEach(([person, dishIds]) => {
+        newAssignments[person] = dishIds.filter(id => id !== dishIdToDelete)
+      })
+      setAssignments(newAssignments)
+    }
+  }
+  
+  // تعيين طبق لشخص
+  const assignDishToPerson = (person, dishId) => {
+    const currentAssignments = assignments[person] || []
+    
+    if (currentAssignments.includes(dishId)) {
+      // إلغاء التعيين
+      setAssignments({
+        ...assignments,
+        [person]: currentAssignments.filter(id => id !== dishId)
+      })
+    } else {
+      // إضافة تعيين
+      setAssignments({
+        ...assignments,
+        [person]: [...currentAssignments, dishId]
+      })
+    }
+  }
+  
+  // طباعة الإيصالات
+  const handlePrint = () => {
+    // إنشاء نافذة طباعة مع تصميم مخصص للإيصال
+    const printWindow = window.open('', '_blank', 'width=800,height=600')
+    if (!printWindow) {
+      alert('الرجاء السماح بالنوافذ المنبثقة للطباعة')
+      return
+    }
+    
+    const printContent = `
+      <!DOCTYPE html>
+      <html dir="rtl">
+      <head>
+        <meta charset="utf-8">
+        <title>إيصال تقسيم القطه</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+          h1, h2 { text-align: center; color: #6b21a8; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+          th { background-color: #f3e8ff; }
+          .total { font-weight: bold; color: #047857; }
+          .receipt { max-width: 800px; margin: 0 auto; }
+          .date { text-align: left; font-size: 0.9em; color: #666; }
+          @media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="receipt">
+          <h1>إيصال تقسيم القطه</h1>
+          <div class="date">تاريخ: ${new Date().toLocaleDateString('ar-SA')}</div>
+          
+          <h2>الأفراد</h2>
+          <p>${people.join('، ')}</p>
+          
+          <h2>الأطباق</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>اسم الطبق</th>
+                <th>السعر الأصلي</th>
+                <th>العملة</th>
+                <th>الكمية</th>
+                <th>المجموع (ريال سعودي)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${dishes.map(dish => `
+                <tr>
+                  <td>${dish.name}</td>
+                  <td>${dish.originalPrice}</td>
+                  <td>${dish.originalCurrency === 'SAR' ? 'ريال سعودي' : 'دينار كويتي'}</td>
+                  <td>${dish.quantity}</td>
+                  <td>${(dish.price * dish.quantity).toFixed(2)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          
+          <h2>توزيع الأطباق</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>الشخص / الطبق</th>
+                ${dishes.map(dish => `<th>${dish.name}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${people.map(person => `
+                <tr>
+                  <td>${person}</td>
+                  ${dishes.map(dish => `
+                    <td>${(assignments[person] || []).includes(dish.id) ? '✔' : '✘'}</td>
+                  `).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          
+          <h2>النتائج النهائية</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>الشخص</th>
+                <th>المجموع المستحق (ريال سعودي)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${Object.entries(totals).map(([person, total]) => `
+                <tr>
+                  <td>${person}</td>
+                  <td class="total">${total.toFixed(2)}</td>
+                </tr>
+              `).join('')}
+              <tr>
+                <td><strong>المجموع الكلي</strong></td>
+                <td class="total">${Object.values(totals).reduce((sum, total) => sum + total, 0).toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <div class="no-print" style="margin-top: 30px; text-align: center;">
+            <button onclick="window.print()">اطبع هذه الصفحة</button>
+            <button onclick="window.close()">إغلاق</button>
+          </div>
+        </div>
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(() => window.close(), 1000);
+          };
+        </script>
+      </body>
+      </html>
+    `
+    
+    printWindow.document.write(printContent)
+    printWindow.document.close()
+  }
+  
+  // تصدير البيانات إلى CSV
+  const exportToCSV = () => {
+    // إنشاء محتوى CSV
+    const csvRows = []
+    
+    // 1. قسم الأشخاص
+    csvRows.push('الأشخاص')
+    csvRows.push('اسم الشخص')
+    people.forEach(person => csvRows.push(`"${person}"`))
+    csvRows.push('')
+    
+    // 2. قسم الأطباق
+    csvRows.push('الأطباق')
+    csvRows.push('اسم الطبق,السعر الأصلي,العملة الأصلية,الكمية,السعر بالريال,المجموع بالريال')
+    dishes.forEach(dish => {
+      const total = dish.price * dish.quantity
+      csvRows.push(`"${dish.name}",${dish.originalPrice},${dish.originalCurrency},${dish.quantity},${dish.price.toFixed(2)},${total.toFixed(2)}`)
+    })
+    csvRows.push('')
+    
+    // 3. قسم التوزيع
+    csvRows.push('التوزيع')
+    const headerRow = ['الشخص/الطبق', ...dishes.map(d => `"${d.name}"`)].join(',')
+    csvRows.push(headerRow)
+    people.forEach(person => {
+      const assignmentsForPerson = assignments[person] || []
+      const row = [`"${person}"`, ...dishes.map(d => assignmentsForPerson.includes(d.id) ? 'نعم' : 'لا')].join(',')
+      csvRows.push(row)
+    })
+    csvRows.push('')
+    
+    // 4. قسم النتائج
+    csvRows.push('النتائج')
+    csvRows.push('الشخص,المجموع المستحق (ريال سعودي)')
+    Object.entries(totals).forEach(([person, total]) => {
+      csvRows.push(`"${person}",${total.toFixed(2)}`)
+    })
+    csvRows.push('')
+    csvRows.push(`المجموع الكلي,${Object.values(totals).reduce((sum, total) => sum + total, 0).toFixed(2)}`)
+    
+    const csvString = csvRows.join('\n')
+    
+    // إنشاء رابط تنزيل
+    const blob = new Blob(['\ufeff' + csvString], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `qittah_export_${new Date().toISOString().slice(0,10)}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+  
+  // إعادة ضبط الكل
+  const resetAll = () => {
+    if (confirm('هل أنت متأكد من إعادة ضبط كل البيانات؟')) {
+      setPeople([])
+      setDishes([])
+      setAssignments({})
+    }
+  }
+  
+  // حذف كل الأطباق
+  const deleteAllDishes = () => {
+    if (confirm('هل أنت متأكد من حذف كل الأطباق؟')) {
+      setDishes([])
+      const newAssignments = {}
+      Object.keys(assignments).forEach(person => {
+        newAssignments[person] = []
+      })
+      setAssignments(newAssignments)
+    }
+  }
+  
+  return (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
+        <h1 className="text-2xl font-bold text-center mb-6 text-purple-800">
+          تقسيم القطه 📱
+        </h1>
+        
+        {/* الجزء 1: الأفراد */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">👥 الأفراد ({people.length}/15)</h2>
+          </div>
+          
+          <div className="flex mb-3">
+            <input
+              type="text"
+              value={newPerson}
+              onChange={(e) => setNewPerson(e.target.value)}
+              placeholder="اسم الشخص..."
+              className="flex-1 p-2 border rounded-l"
+              onKeyPress={(e) => e.key === 'Enter' && addPerson()}
+            />
+            <button
+              onClick={addPerson}
+              disabled={!newPerson.trim() || people.length >= 15}
+              className="bg-purple-600 text-white px-4 py-2 rounded-r disabled:bg-gray-300"
+            >
+              +
+            </button>
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            {people.map(person => (
+              <span
+                key={person}
+                className="inline-flex items-center bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm"
+              >
+                {person}
+                <button
+                  onClick={() => deletePerson(person)}
+                  className="mr-1 text-red-500 hover:text-red-700 text-xs"
+                  title="حذف"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+        
+        {/* الجزء 2: الأطباق */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">🍽️ الأطباق ({dishes.length})</h2>
+            <button
+              onClick={deleteAllDishes}
+              disabled={dishes.length === 0}
+              className="text-red-600 text-sm disabled:text-gray-300"
+            >
+              حذف الكل
+            </button>
+          </div>
+          
+          <div className="space-y-2 mb-3">
+            <input
+              type="text"
+              value={newDish.name}
+              onChange={(e) => setNewDish({...newDish, name: e.target.value})}
+              placeholder="اسم الطبق..."
+              className="w-full p-2 border rounded"
+            />
+            <div className="flex gap-2">
+              <input
+                type="number"
+                value={newDish.price}
+                onChange={(e) => setNewDish({...newDish, price: e.target.value})}
+                placeholder="السعر..."
+                className="flex-1 p-2 border rounded"
+                step="0.01"
+              />
+              <select
+                value={newDish.currency}
+                onChange={(e) => setNewDish({...newDish, currency: e.target.value})}
+                className="w-24 p-2 border rounded"
+              >
+                <option value="SAR">ريال سعودي</option>
+                <option value="KWD">دينار كويتي</option>
+              </select>
+              <input
+                type="number"
+                value={newDish.quantity}
+                onChange={(e) => setNewDish({...newDish, quantity: e.target.value})}
+                className="w-20 p-2 border rounded"
+                min="1"
+              />
+            </div>
+            <button
+              onClick={addDish}
+              disabled={!newDish.name.trim() || !newDish.price}
+              className="w-full bg-green-600 text-white py-2 rounded disabled:bg-gray-300"
+            >
+              + أضف طبق
+            </button>
+          </div>
+          
+          <div className="space-y-2 max-h-40 overflow-y-auto">
+            {dishes.map(dish => (
+              <div key={dish.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <div>
+                  <span className="font-medium">{dish.name}</span>
+                  <span className="text-gray-600 text-sm mr-2">
+                    ({dish.originalPrice} {dish.originalCurrency === 'SAR' ? '﷼' : 'د.ك'} × {dish.quantity})
+                    {dish.originalCurrency !== 'SAR' && (
+                      <span className="text-gray-500 text-xs"> (≈{dish.price.toFixed(2)}﷼)</span>
+                    )}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-purple-800 font-semibold">
+                    {(dish.price * dish.quantity).toFixed(2)}﷼
+                  </span>
+                  <button
+                    onClick={() => deleteDish(dish.id)}
+                    className="text-red-500 hover:text-red-700 text-sm"
+                    title="حذف الطبق"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* الجزء 3: توزيع الأطباق */}
+        {people.length > 0 && dishes.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-3">🔗 توزيع الأطباق</h2>
+            
+            {dishes.map(dish => (
+              <div key={dish.id} className="mb-4 p-3 bg-purple-50 rounded">
+                <div className="font-medium mb-2">
+                  {dish.name} ({(dish.price * dish.quantity).toFixed(2)}﷼)
+                </div>
+                <div className="text-sm text-gray-600 mb-2">
+                  مقسم على: {Object.entries(assignments).filter(([_, ids]) => ids.includes(dish.id)).length} أشخاص
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {people.map(person => (
+                    <label key={`${dish.id}-${person}`} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={(assignments[person] || []).includes(dish.id)}
+                        onChange={() => assignDishToPerson(person, dish.id)}
+                        className="ml-1"
+                      />
+                      <span className="text-sm">{person}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {/* الجزء 4: جدول النتائج */}
+        {Object.keys(totals).length > 0 && (
+          <div>
+            <h2 className="text-lg font-semibold mb-3">📊 جدول القطع النهائي</h2>
+            
+            <div className="space-y-2">
+              {Object.entries(totals).map(([person, total]) => (
+                <div key={person} className="flex justify-between items-center p-3 bg-green-50 rounded">
+                  <div>
+                    <span className="font-medium">{person}</span>
+                    <div className="text-sm text-gray-600">
+                      {(assignments[person] || []).map(dishId => {
+                        const dish = dishes.find(d => d.id === dishId)
+                        return dish ? `${dish.name}(${dish.quantity})` : ''
+                      }).join(', ') || 'لا يوجد'}
+                    </div>
+                  </div>
+                  <span className="text-green-800 font-bold text-lg">
+                    {total.toFixed(2)}﷼
+                  </span>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-4 p-3 bg-gray-100 rounded text-center">
+              <span className="font-bold">المجموع: </span>
+              <span className="text-xl text-purple-800">
+                {Object.values(totals).reduce((sum, total) => sum + total, 0).toFixed(2)}﷼
+              </span>
+            </div>
+          </div>
+        )}
+        
+        {/* أزرار التحكم */}
+        <div className="mt-6 flex gap-2">
+          <button
+            onClick={resetAll}
+            className="flex-1 bg-red-600 text-white py-2 rounded"
+          >
+            إعادة ضبط الكل
+          </button>
+          <button
+            onClick={exportToCSV}
+            className="flex-1 bg-blue-600 text-white py-2 rounded"
+            disabled={people.length === 0 && dishes.length === 0}
+          >
+            تصدير CSV
+          </button>
+          <button
+            onClick={handlePrint}
+            className="flex-1 bg-green-600 text-white py-2 rounded"
+            disabled={Object.keys(totals).length === 0}
+          >
+            طباعة الإيصالات
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
