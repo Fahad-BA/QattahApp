@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons.svg', 'robots.txt'],
+      includeAssets: ['favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png', 'apple-touch-icon.png', 'robots.txt'],
       manifest: {
         name: 'تقسيم القطه | Qattah App',
         short_name: 'تقسيم القطه',
@@ -25,16 +25,24 @@ export default defineConfig({
         id: '/',
         icons: [
           {
-            src: '/favicon.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-            purpose: 'any'
+            src: '/favicon.ico',
+            sizes: '64x64 32x32 24x24 16x16',
+            type: 'image/x-icon'
           },
           {
-            src: '/icons.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
-            purpose: 'maskable'
+            src: '/favicon-16x16.png',
+            sizes: '16x16',
+            type: 'image/png'
+          },
+          {
+            src: '/favicon-32x32.png',
+            sizes: '32x32',
+            type: 'image/png'
+          },
+          {
+            src: '/apple-touch-icon.png',
+            sizes: '180x180',
+            type: 'image/png'
           },
           {
             src: '/pwa-192x192.png',
@@ -101,6 +109,38 @@ export default defineConfig({
     }),
     terser()
   ],
+  // Add allowed hosts for security
+  server: {
+    host: '0.0.0.0',
+    port: 3000,
+    cors: {
+      origin: [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://192.168.1.9:3000',
+        'http://192.168.1.9:3001',
+        'http://qattah.fhidan.com',
+        'https://qattah.fhidan.com',
+      ],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    },
+    hmr: {
+      host: 'qattah.fhidan.com',
+      protocol: 'ws',
+    },
+  },
+  preview: {
+    host: 'qattah.fhidan.com',
+    port: 3000,
+    allowedHosts: [
+      'localhost',
+      '192.168.1.9',
+      'qattah.fhidan.com',
+      '*.fhidan.com',
+      '.fhidan.com',
+    ],
+  },
   build: {
     target: 'es2022',
     minify: 'terser',
@@ -132,10 +172,25 @@ export default defineConfig({
     cssCodeSplit: true,
     chunkSizeWarningLimit: 1000
   },
+  // Add CSP and security headers
   server: {
     headers: {
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com;"
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; frame-ancestors 'self' https://qattah.fhidan.com https://*.fhidan.com;",
+      'X-Frame-Options': 'SAMEORIGIN',
+      'X-Content-Type-Options': 'nosniff',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
     }
+  },
+  // Define global environment variables
+  define: {
+    'import.meta.env.VITE_ALLOWED_HOSTS': JSON.stringify([
+      'localhost',
+      '192.168.1.9',
+      'qattah.fhidan.com',
+      '*.fhidan.com',
+      '.fhidan.com',
+    ]),
   },
   test: {
     globals: true,
