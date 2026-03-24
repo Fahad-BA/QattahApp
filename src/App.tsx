@@ -254,18 +254,6 @@ export default function QattahApp() {
 
         <footer className="mt-12 border-t border-gray-200 dark:border-gray-800 py-6">
           <div className="max-w-7xl mx-auto px-4 text-center text-gray-600 dark:text-gray-400 text-sm">
-            <p>
-              تطبيق تقسيم القطه •{' '}
-              <a
-                href="https://github.com/Fahad-BA/QattahApp"
-                className="text-primary-600 dark:text-primary-400 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub
-              </a>{' '}
-              • صنع بـ ❤️ للمجتمع العربي
-            </p>
             <p className="mt-2">
               البيانات تُحفظ تلقائياً في متصفحك • يمكنك استخدام التطبيق دون اتصال
             </p>
