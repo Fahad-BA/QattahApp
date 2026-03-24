@@ -9,7 +9,7 @@ import { HostValidator } from './components/HostValidator';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { calculateTotals } from './utils/calculations';
 import type { Dish, Person, Assignments, NewDish } from './types';
-import { FiMoon, FiSun, FiRefreshCw, FiShare, FiGithub } from 'react-icons/fi';
+import { FiMoon, FiSun, FiRefreshCw } from 'react-icons/fi';
 import { useRef } from 'react';
 
 export default function QattahApp() {

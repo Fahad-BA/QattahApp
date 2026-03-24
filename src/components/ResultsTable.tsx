@@ -17,9 +17,7 @@ export const ResultsTable = ({
   dishes,
   assignments,
   totals,
-  onPrint,
   onExportCSV,
-  onShare,
 }: ResultsTableProps) => {
   if (Object.keys(totals).length === 0) return null;
 
