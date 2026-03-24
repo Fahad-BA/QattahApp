@@ -5,6 +5,7 @@ import { DishList } from './components/DishList';
 import { AssignmentTable } from './components/AssignmentTable';
 import { ResultsTable } from './components/ResultsTable';
 import { DarkModeToggle } from './components/DarkModeToggle';
+import { HostValidator } from './components/HostValidator';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { calculateTotals } from './utils/calculations';
 import type { Dish, Person, Assignments, NewDish } from './types';
@@ -113,7 +114,8 @@ export default function QattahApp() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+      <HostValidator>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
         {/* Header */}
         <header className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
@@ -132,15 +134,6 @@ export default function QattahApp() {
             </div>
 
             <div className="flex items-center gap-4">
-              <a
-                href="https://github.com/Fahad-BA/QattahApp"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                aria-label="GitHub"
-              >
-                <FiGithub size={20} />
-              </a>
               <div className="flex items-center gap-2">
                 <FiSun className="text-yellow-500" />
                 <DarkModeToggle />
@@ -260,6 +253,7 @@ export default function QattahApp() {
           </div>
         </footer>
       </div>
+      </HostValidator>
     </ErrorBoundary>
   );
 }

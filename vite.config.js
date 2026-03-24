@@ -121,24 +121,28 @@ export default defineConfig({
         'http://192.168.1.9:3001',
         'http://qattah.fhidan.com',
         'https://qattah.fhidan.com',
+        'http://q.fhidan.com',
+        'https://q.fhidan.com',
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
     },
     hmr: {
-      host: 'qattah.fhidan.com',
+      host: 'q.fhidan.com',
       protocol: 'ws',
     },
   },
   preview: {
-    host: 'qattah.fhidan.com',
+    host: 'q.fhidan.com',
     port: 3000,
     allowedHosts: [
       'localhost',
       '192.168.1.9',
       'qattah.fhidan.com',
+      'q.fhidan.com',
       '*.fhidan.com',
       '.fhidan.com',
+      'fhidan.com',
     ],
   },
   build: {
@@ -175,7 +179,7 @@ export default defineConfig({
   // Add CSP and security headers
   server: {
     headers: {
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; frame-ancestors 'self' https://qattah.fhidan.com https://*.fhidan.com;",
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; frame-ancestors 'self' https://qattah.fhidan.com https://q.fhidan.com https://*.fhidan.com https://fhidan.com;",
       'X-Frame-Options': 'SAMEORIGIN',
       'X-Content-Type-Options': 'nosniff',
       'X-XSS-Protection': '1; mode=block',
@@ -186,10 +190,13 @@ export default defineConfig({
   define: {
     'import.meta.env.VITE_ALLOWED_HOSTS': JSON.stringify([
       'localhost',
+      '127.0.0.1',
       '192.168.1.9',
       'qattah.fhidan.com',
+      'q.fhidan.com',
       '*.fhidan.com',
       '.fhidan.com',
+      'fhidan.com',
     ]),
   },
   test: {

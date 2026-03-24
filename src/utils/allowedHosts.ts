@@ -7,8 +7,10 @@ export const ALLOWED_HOSTS = [
   '127.0.0.1',
   '192.168.1.9',
   'qattah.fhidan.com',
+  'q.fhidan.com',
   '*.fhidan.com',
   '.fhidan.com',
+  'fhidan.com',
 ] as const;
 
 export type AllowedHost = typeof ALLOWED_HOSTS[number];
