@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import QittahApp from './App.jsx';
+import QattahApp from './App.jsx';
 
-describe('QittahApp', () => {
+describe('QattahApp', () => {
   beforeEach(() => {
     // تنظيف localStorage قبل كل اختبار
     window.localStorage.clear();
@@ -15,14 +15,14 @@ describe('QittahApp', () => {
   });
 
   it('renders the app title', () => {
-    render(<QittahApp />);
+    render(<QattahApp />);
     const title = screen.getByText(/تقسيم القطه/i);
     expect(title).toBeInTheDocument();
   });
 
   it('adds a new person', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     const input = screen.getByPlaceholderText(/اسم الشخص/i);
     const addButton = screen.getByRole('button', { name: '+' });
@@ -37,7 +37,7 @@ describe('QittahApp', () => {
 
   it('does not add empty person', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     const addButton = screen.getByRole('button', { name: '+' });
     expect(addButton).toBeDisabled();
@@ -49,7 +49,7 @@ describe('QittahApp', () => {
 
   it('adds a new dish', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     const nameInput = screen.getByPlaceholderText(/اسم الطبق/i);
     const priceInputs = screen.getAllByPlaceholderText(/السعر/i);
@@ -71,7 +71,7 @@ describe('QittahApp', () => {
 
   it('assigns dish to person and calculates totals', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     // إضافة شخص
     const personInput = screen.getByPlaceholderText(/اسم الشخص/i);
@@ -111,7 +111,7 @@ describe('QittahApp', () => {
 
   it('resets all data', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     // إضافة بعض البيانات
     const personInput = screen.getByPlaceholderText(/اسم الشخص/i);

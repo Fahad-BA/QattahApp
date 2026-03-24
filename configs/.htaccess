@@ -1,4 +1,4 @@
-# Apache configuration for Qittah App (SPA)
+# Apache configuration for Qattah App (SPA)
 RewriteEngine On
 
 # Redirect to HTTPS (uncomment if SSL is configured)

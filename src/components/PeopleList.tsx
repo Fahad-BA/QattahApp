@@ -37,14 +37,14 @@ export const PeopleList = ({
         </h2>
       </div>
 
-      <div className="flex mb-4">
+      <div className="flex mb-4 flex-row-reverse">
         <input
           type="text"
           value={newPerson}
           onChange={(e) => setNewPerson(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="أدخل اسم الشخص..."
-          className="input-field rounded-r-none"
+          className="input-field rounded-l-none"
           aria-label="اسم الشخص الجديد"
         />
         <button

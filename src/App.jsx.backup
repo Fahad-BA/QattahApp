@@ -25,11 +25,11 @@ const useLocalStorage = (key, initialValue) => {
   return [storedValue, setValue]
 }
 
-export default function QittahApp() {
+export default function QattahApp() {
   // الحالات الرئيسية
-  const [people, setPeople] = useLocalStorage('qittah-people', [])
-  const [dishes, setDishes] = useLocalStorage('qittah-dishes', [])
-  const [assignments, setAssignments] = useLocalStorage('qittah-assignments', {})
+  const [people, setPeople] = useLocalStorage('qattah-people', [])
+  const [dishes, setDishes] = useLocalStorage('qattah-dishes', [])
+  const [assignments, setAssignments] = useLocalStorage('qattah-assignments', {})
   
   // حالات الإدخال المؤقتة
   const [newPerson, setNewPerson] = useState('')
@@ -324,7 +324,7 @@ export default function QittahApp() {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.setAttribute('download', `qittah_export_${new Date().toISOString().slice(0,10)}.csv`)
+    link.setAttribute('download', `qattah_export_${new Date().toISOString().slice(0,10)}.csv`)
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)

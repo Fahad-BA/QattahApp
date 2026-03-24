@@ -1,6 +1,6 @@
 import { Dish, Person, Assignments, Totals } from '../types';
-import { FiCheckCircle, FiPrinter, FiDownload, FiShare2 } from 'react-icons/fi';
-import { generateCSVData, createShareableLink } from '../utils/calculations';
+import { FiCheckCircle, FiDownload } from 'react-icons/fi';
+import { generateCSVData } from '../utils/calculations';
 
 interface ResultsTableProps {
   people: Person[];
@@ -33,20 +33,10 @@ export const ResultsTable = ({
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
-      link.setAttribute('download', `qittah_${new Date().toISOString().slice(0, 10)}.csv`);
+      link.setAttribute('download', `qattah_${new Date().toISOString().slice(0, 10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    }
-  };
-
-  const handleShare = () => {
-    const url = createShareableLink(people, dishes, assignments);
-    if (onShare) onShare(url);
-    else {
-      navigator.clipboard.writeText(url).then(() => {
-        alert('تم نسخ رابط المشاركة إلى الحافظة!');
-      });
     }
   };
 
@@ -59,31 +49,13 @@ export const ResultsTable = ({
         </div>
 
         <div className="flex gap-2 mt-4 sm:mt-0">
-          {onPrint && (
-            <button
-              onClick={onPrint}
-              className="btn-secondary flex items-center gap-2 text-sm"
-              aria-label="طباعة النتائج"
-            >
-              <FiPrinter />
-              طباعة
-            </button>
-          )}
           <button
             onClick={handleExport}
             className="btn-secondary flex items-center gap-2 text-sm"
-            aria-label="تصدير إلى CSV"
+            aria-label="تصدير البيانات"
           >
             <FiDownload />
-            CSV
-          </button>
-          <button
-            onClick={handleShare}
-            className="btn-secondary flex items-center gap-2 text-sm"
-            aria-label="مشاركة الرابط"
-          >
-            <FiShare2 />
-            مشاركة
+            تصدير
           </button>
         </div>
       </div>

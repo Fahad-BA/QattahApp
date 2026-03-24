@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import QittahApp from './App.jsx';
+import QattahApp from './App.jsx';
 
 describe('Edge Cases and Error Handling', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('Edge Cases and Error Handling', () => {
     });
     
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     const input = screen.getByPlaceholderText(/اسم الشخص/i);
     const addButton = screen.getByRole('button', { name: '+' });
@@ -39,7 +39,7 @@ describe('Edge Cases and Error Handling', () => {
 
   it('prevents adding duplicate person names', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     const input = screen.getByPlaceholderText(/اسم الشخص/i);
     const addButton = screen.getByRole('button', { name: '+' });
@@ -63,7 +63,7 @@ describe('Edge Cases and Error Handling', () => {
 
   it('handles invalid price input', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     const nameInput = screen.getByPlaceholderText(/اسم الطبق/i);
     const priceInput = screen.getAllByPlaceholderText(/السعر/i)[0];
@@ -84,7 +84,7 @@ describe('Edge Cases and Error Handling', () => {
 
   it('adds person on Enter key', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     const input = screen.getByPlaceholderText(/اسم الشخص/i);
     await user.type(input, 'فهد');
@@ -96,7 +96,7 @@ describe('Edge Cases and Error Handling', () => {
 
   it('deletes a person', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     // إضافة شخص
     const input = screen.getByPlaceholderText(/اسم الشخص/i);
@@ -125,7 +125,7 @@ describe('Edge Cases and Error Handling', () => {
 
   it('changes currency and recalculates', async () => {
     const user = userEvent.setup();
-    render(<QittahApp />);
+    render(<QattahApp />);
     
     // إضافة طبق
     const nameInput = screen.getByPlaceholderText(/اسم الطبق/i);

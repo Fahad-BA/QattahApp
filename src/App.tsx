@@ -9,14 +9,13 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { calculateTotals } from './utils/calculations';
 import type { Dish, Person, Assignments, NewDish } from './types';
 import { FiMoon, FiSun, FiRefreshCw, FiShare, FiGithub } from 'react-icons/fi';
-import { useReactToPrint } from 'react-to-print';
 import { useRef } from 'react';
 
-export default function QittahApp() {
+export default function QattahApp() {
   // State with localStorage persistence
-  const [people, setPeople] = useLocalStorage<Person[]>('qittah-people', []);
-  const [dishes, setDishes] = useLocalStorage<Dish[]>('qittah-dishes', []);
-  const [assignments, setAssignments] = useLocalStorage<Assignments>('qittah-assignments', {});
+  const [people, setPeople] = useLocalStorage<Person[]>('qattah-people', []);
+  const [dishes, setDishes] = useLocalStorage<Dish[]>('qattah-dishes', []);
+  const [assignments, setAssignments] = useLocalStorage<Assignments>('qattah-assignments', {});
 
   // Calculate totals memoized
   const totals = useMemo(
@@ -24,12 +23,8 @@ export default function QittahApp() {
     [dishes, assignments, people]
   );
 
-  // Print functionality
-  const printRef = useRef<HTMLDivElement>(null);
-  const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-    documentTitle: `qittah_${new Date().toISOString().slice(0, 10)}`,
-  });
+  // Results table ref
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   // Add person
   const addPerson = useCallback((name: string) => {
@@ -110,17 +105,10 @@ export default function QittahApp() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `qittah_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `qattah_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }, []);
-
-  // Share link
-  const handleShare = useCallback((url: string) => {
-    navigator.clipboard.writeText(url).then(() => {
-      alert('✅ تم نسخ رابط المشاركة إلى الحافظة! شاركه مع الآخرين.');
-    });
   }, []);
 
   return (
@@ -145,7 +133,7 @@ export default function QittahApp() {
 
             <div className="flex items-center gap-4">
               <a
-                href="https://github.com/fahad-ba/QattahApp"
+                href="https://github.com/Fahad-BA/QattahApp"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
@@ -200,15 +188,13 @@ export default function QittahApp() {
 
             {/* Right column: Results & Actions */}
             <div className="space-y-8">
-              <div ref={printRef}>
+              <div ref={resultsRef}>
                 <ResultsTable
                   people={people}
                   dishes={dishes}
                   assignments={assignments}
                   totals={totals}
-                  onPrint={handlePrint}
                   onExportCSV={handleExportCSV}
-                  onShare={handleShare}
                 />
               </div>
 
@@ -259,10 +245,7 @@ export default function QittahApp() {
                     <span className="text-primary-600">•</span>
                     عيّن لكل طبق الأشخاص الذين شاركوا فيه.
                   </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary-600">•</span>
-                    استخدم زر "مشاركة" لإرسال الحالة للآخرين.
-                  </li>
+
                 </ul>
               </div>
             </div>
@@ -274,7 +257,7 @@ export default function QittahApp() {
             <p>
               تطبيق تقسيم القطه •{' '}
               <a
-                href="https://github.com/Fahad-ba/QattahApp"
+                href="https://github.com/Fahad-BA/QattahApp"
                 className="text-primary-600 dark:text-primary-400 hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"

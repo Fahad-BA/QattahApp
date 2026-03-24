@@ -13,7 +13,7 @@ export default defineConfig({
     //   registerType: 'autoUpdate',
     //   includeAssets: ['favicon.svg', 'icons.svg', 'robots.txt'],
     //   manifest: {
-    //     name: 'تقسيم القطه | Qittah App',
+    //     name: 'تقسيم القطه | Qattah App',
     //     short_name: 'تقسيم القطه',
     //     description: 'تطبيق تقسيم القطّة - حساب المصاريف والمشاركة بين الأفراد بسهولة وبطريقة عادلة',
     //     theme_color: '#3b82f6',
