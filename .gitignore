@@ -210,3 +210,10 @@ Thumbs.db
 !README.md
 !.github/README.md  # Keep GitHub README if needed
 !.github/ISSUE_TEMPLATE/*.md  # Keep GitHub issue templates if needed
+qattah-3000.service
+qattah-4000.service
+qattah-esm.service
+qattah-final.service
+qattah-python.service
+qattah-robust.service
+qattah.service

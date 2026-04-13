@@ -43,7 +43,7 @@ export const ResultsTable = ({
       <div className="flex flex-wrap items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <FiCheckCircle className="text-green-600 text-2xl" />
-          <h2 className="text-xl font-bold">جدول القطع النهائي</h2>
+          <h2 className="text-xl font-bold">جدول القطّه النهائي</h2>
         </div>
 
         <div className="flex gap-2 mt-4 sm:mt-0">
@@ -90,7 +90,7 @@ export const ResultsTable = ({
 
                 <div className="mt-4 sm:mt-0">
                   <div className="text-2xl font-bold text-green-700 dark:text-green-300">
-                    {totals[person]?.toFixed(2)}﷼
+                    {totals[person]?.toFixed(2)}⃁
                   </div>
                   <div className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">
                     {assignedDishes.length > 0
@@ -111,7 +111,7 @@ export const ResultsTable = ({
             <div className="text-sm opacity-90 mt-1">إجمالي المبلغ المستحق على الجميع</div>
           </div>
           <div className="mt-4 sm:mt-0">
-            <div className="text-4xl font-bold">{grandTotal.toFixed(2)}﷼</div>
+            <div className="text-4xl font-bold">{grandTotal.toFixed(2)}⃁</div>
             <div className="text-sm opacity-90 text-center mt-1">
               {people.length} أشخاص • {dishes.length} أطباق
             </div>

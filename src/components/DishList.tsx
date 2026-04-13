@@ -117,12 +117,12 @@ export const DishList = ({
                 <div className="flex-1">
                   <div className="font-medium text-lg">{dish.name}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {dish.price}﷼ × {dish.quantity}
+                    {dish.price}⃁ × {dish.quantity}
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-xl font-bold text-secondary-700 dark:text-secondary-300">
-                    {(dish.price * dish.quantity).toFixed(2)}﷼
+                    {(dish.price * dish.quantity).toFixed(2)}⃁
                   </span>
                   <button
                     onClick={() => onRemoveDish(dish.id)}
@@ -140,7 +140,7 @@ export const DishList = ({
             <div className="flex justify-between items-center">
               <span className="font-medium">المجموع الكلي للأطباق:</span>
               <span className="text-2xl font-bold text-primary-700 dark:text-primary-300">
-                {totalDishesCost.toFixed(2)}﷼
+                {totalDishesCost.toFixed(2)}⃁
               </span>
             </div>
           </div>

@@ -520,15 +520,15 @@ export default function QattahApp() {
                 <div>
                   <span className="font-medium">{dish.name}</span>
                   <span className="text-gray-600 text-sm mr-2">
-                    ({dish.originalPrice} {dish.originalCurrency === 'SAR' ? '﷼' : 'د.ك'} × {dish.quantity})
+                    ({dish.originalPrice} {dish.originalCurrency === 'SAR' ? '⃁' : 'د.ك'} × {dish.quantity})
                     {dish.originalCurrency !== 'SAR' && (
-                      <span className="text-gray-500 text-xs"> (≈{dish.price.toFixed(2)}﷼)</span>
+                      <span className="text-gray-500 text-xs"> (≈{dish.price.toFixed(2)}⃁)</span>
                     )}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-purple-800 font-semibold">
-                    {(dish.price * dish.quantity).toFixed(2)}﷼
+                    {(dish.price * dish.quantity).toFixed(2)}⃁
                   </span>
                   <button
                     onClick={() => deleteDish(dish.id)}
@@ -551,7 +551,7 @@ export default function QattahApp() {
             {dishes.map(dish => (
               <div key={dish.id} className="mb-4 p-3 bg-purple-50 rounded">
                 <div className="font-medium mb-2">
-                  {dish.name} ({(dish.price * dish.quantity).toFixed(2)}﷼)
+                  {dish.name} ({(dish.price * dish.quantity).toFixed(2)}⃁)
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
                   مقسم على: {Object.entries(assignments).filter(([, ids]) => ids.includes(dish.id)).length} أشخاص
@@ -592,7 +592,7 @@ export default function QattahApp() {
                     </div>
                   </div>
                   <span className="text-green-800 font-bold text-lg">
-                    {total.toFixed(2)}﷼
+                    {total.toFixed(2)}⃁
                   </span>
                 </div>
               ))}
@@ -601,7 +601,7 @@ export default function QattahApp() {
             <div className="mt-4 p-3 bg-gray-100 rounded text-center">
               <span className="font-bold">المجموع: </span>
               <span className="text-xl text-purple-800">
-                {Object.values(totals).reduce((sum, total) => sum + total, 0).toFixed(2)}﷼
+                {Object.values(totals).reduce((sum, total) => sum + total, 0).toFixed(2)}⃁
               </span>
             </div>
           </div>

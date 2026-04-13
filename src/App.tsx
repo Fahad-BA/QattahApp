@@ -215,7 +215,7 @@ export default function QattahApp() {
                   </div>
                   <div className="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
                     <div className="text-3xl font-bold text-purple-700 dark:text-purple-300">
-                      {Object.values(totals).reduce((sum, t) => sum + t, 0).toFixed(2)}﷼
+                      {Object.values(totals).reduce((sum, t) => sum + t, 0).toFixed(2)}⃁
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">المجموع</div>
                   </div>

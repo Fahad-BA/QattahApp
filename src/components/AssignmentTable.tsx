@@ -42,12 +42,12 @@ export const AssignmentTable = ({
                 <div>
                   <h3 className="font-bold text-lg">{dish.name}</h3>
                   <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                    {(dish.price * dish.quantity).toFixed(2)}﷼
+                    {(dish.price * dish.quantity).toFixed(2)}⃁
                     {assignedPeople.length > 0 && (
                       <>
                         {' '}
                         • مقسم على {assignedPeople.length} أشخاص •{' '}
-                        {costPerPerson.toFixed(2)}﷼ للشخص
+                        {costPerPerson.toFixed(2)}⃁ للشخص
                       </>
                     )}
                   </p>
