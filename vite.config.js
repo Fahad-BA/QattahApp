@@ -69,7 +69,7 @@ export default defineConfig({
               cacheName: 'google-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                maxAgeSeconds: 60 * 60 * 24 * 365
               },
               cacheableResponse: {
                 statuses: [0, 200]
@@ -83,7 +83,7 @@ export default defineConfig({
               cacheName: 'gstatic-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                maxAgeSeconds: 60 * 60 * 24 * 365
               },
               cacheableResponse: {
                 statuses: [0, 200]
@@ -109,7 +109,6 @@ export default defineConfig({
     }),
     terser()
   ],
-  // Add allowed hosts for security
   server: {
     host: '0.0.0.0',
     port: 3000,
@@ -126,6 +125,13 @@ export default defineConfig({
       ],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
+    },
+    headers: {
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; frame-ancestors 'self' https://qattah.fhidan.com https://q.fhidan.com https://*.fhidan.com https://fhidan.com;",
+      'X-Frame-Options': 'SAMEORIGIN',
+      'X-Content-Type-Options': 'nosniff',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
     },
     hmr: {
       host: 'q.fhidan.com',
@@ -151,18 +157,22 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true
-      }
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.debug'],
+      },
+      format: {
+        comments: false,
+      },
     },
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
+            if (id.includes('react-dom')) {
               return 'vendor-react'
             }
-            if (id.includes('@mui') || id.includes('@emotion')) {
-              return 'vendor-ui'
+            if (id.includes('react-icons')) {
+              return 'vendor-icons'
             }
             return 'vendor-other'
           }
@@ -174,19 +184,8 @@ export default defineConfig({
     },
     sourcemap: false,
     cssCodeSplit: true,
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 500,
   },
-  // Add CSP and security headers
-  server: {
-    headers: {
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; frame-ancestors 'self' https://qattah.fhidan.com https://q.fhidan.com https://*.fhidan.com https://fhidan.com;",
-      'X-Frame-Options': 'SAMEORIGIN',
-      'X-Content-Type-Options': 'nosniff',
-      'X-XSS-Protection': '1; mode=block',
-      'Referrer-Policy': 'strict-origin-when-cross-origin',
-    }
-  },
-  // Define global environment variables
   define: {
     'import.meta.env.VITE_ALLOWED_HOSTS': JSON.stringify([
       'localhost',
