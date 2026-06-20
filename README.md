@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.0-blue?style=for-the-badge&logo=github&logoColor=white" alt="Version">
-  <img src="https://img.shields.io/badge/react-18%2B-blue?style=for-the-badge&logo=react&logoColor=white" alt="React">
+  <img src="https://img.shields.io/badge/react-19%2B-blue?style=for-the-badge&logo=react&logoColor=white" alt="React">
   <img src="https://img.shields.io/badge/typescript-blue?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/tailwindcss-3.4%2B-cyan?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge&logo=github&logoColor=white" alt="License">
@@ -47,8 +47,7 @@
 - **Real-time Updates** ⚡ - Live calculations without page refreshes
 
 ### 📊 **Advanced Functionality**
-- **CSV Export** 📄 - Export complete bill data for accounting
-- **Print Receipts** 🖨️ - Generate beautiful, printable receipts
+- **CSV Export** 📄 - Export complete bill data for accounting (built-in, no external library)
 - **Shareable Links** 🔗 - Share bill states via encrypted URLs
 - **Multi-Currency Support** 💰 - Saudi Riyal and Kuwaiti Dinar
 - **Offline Mode** 📱 - PWA support for use without internet
@@ -57,6 +56,7 @@
 - **TypeScript** 📝 - Type-safe development with full IntelliSense
 - **Performance Optimized** ⚡ - Code splitting and lazy loading
 - **Error Handling** 🛡️ - Comprehensive error boundaries and user feedback
+- **Optimized Bundle** ⚡ - Brotli compression, code splitting, minimal dependencies
 - **Accessibility** ♿ - Full ARIA compliance and keyboard navigation
 
 ---
@@ -178,7 +178,7 @@ VITE_ENABLE_ANALYTICS=false
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   React App     │────│   PWA Service   │────│   Local Storage │
-│ (SPA + Router)  │    │   (Offline)     │    │   (Data Store)   │
+│  (SPA)          │    │   (Offline)     │    │   (Data Store)   │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          └───────────────────────┼───────────────────────┘
@@ -190,7 +190,7 @@ VITE_ENABLE_ANALYTICS=false
 ```
 
 ### 🎯 **Key Technologies**
-- **React 18** - Modern UI framework with concurrent features
+- **React 19** - Modern UI framework with concurrent features
 - **TypeScript** - Type-safe development and better IDE support
 - **Tailwind CSS** - Utility-first CSS framework
 - **Vite** - Fast build tool and development server
@@ -209,7 +209,7 @@ npm run test:coverage # Run tests with coverage
 
 # Code Quality
 npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript checker
+npm run typecheck    # Run TypeScript checker
 ```
 
 ---
@@ -293,7 +293,6 @@ export const features = {
   pwa: true,
   analytics: false,
   export: true,
-  print: true,
   sharing: true,
 }
 ```
