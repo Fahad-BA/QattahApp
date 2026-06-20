@@ -32,7 +32,7 @@ export const DishList = ({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleAdd();
   };
 
@@ -64,7 +64,7 @@ export const DishList = ({
           type="text"
           value={newDish.name}
           onChange={(e) => setNewDish({ ...newDish, name: e.target.value })}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           placeholder="اسم الطبق (مثال: بيتزا، مشروبات...)"
           className="input-field"
           aria-label="اسم الطبق"

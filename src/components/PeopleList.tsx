@@ -24,7 +24,7 @@ export const PeopleList = ({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleAdd();
   };
 
@@ -42,7 +42,7 @@ export const PeopleList = ({
           type="text"
           value={newPerson}
           onChange={(e) => setNewPerson(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           placeholder="أدخل اسم الشخص..."
           className="input-field rounded-l-none"
           aria-label="اسم الشخص الجديد"

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { PeopleList } from './components/PeopleList';
 import { DishList } from './components/DishList';
@@ -8,9 +8,8 @@ import { DarkModeToggle } from './components/DarkModeToggle';
 import { HostValidator } from './components/HostValidator';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { calculateTotals } from './utils/calculations';
-import type { Dish, Person, Assignments, NewDish } from './types';
+import type { Dish, Person, Assignments } from './types';
 import { FiMoon, FiSun, FiRefreshCw } from 'react-icons/fi';
-import { useRef } from 'react';
 
 export default function QattahApp() {
   // State with localStorage persistence

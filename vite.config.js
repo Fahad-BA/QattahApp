@@ -101,11 +101,8 @@ export default defineConfig({
     }),
     compression({
       algorithm: 'gzip',
-      ext: '.gz'
-    }),
-    compression({
-      algorithm: 'brotliCompress',
-      ext: '.br'
+      ext: '.gz',
+      threshold: 0,
     }),
     terser()
   ],

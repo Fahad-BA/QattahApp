@@ -26,7 +26,26 @@ export const DarkModeToggle = () => {
     }
   }, [isDark]);
 
+  // Listen for system theme changes (when user hasn't explicitly set a preference)
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!('theme' in localStorage)) {
+        setIsDark(e.matches);
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
   const toggle = () => setIsDark(!isDark);
+
+  // RTL-aware positioning: knob starts at right (RTL start)
+  // Dark = slide left, Light = stay right
+  // Button is 56px (w-14), knob is 24px (w-6), travel = 32px
+  const knobPosition = isDark
+    ? 'left-1'   // dark: knob at left
+    : 'right-1'; // light: knob at right (RTL natural start)
 
   return (
     <button
@@ -35,9 +54,7 @@ export const DarkModeToggle = () => {
       aria-label={isDark ? 'تفعيل الوضع الفاتح' : 'تفعيل الوضع الداكن'}
     >
       <div
-        className={`absolute top-1 w-6 h-6 rounded-full bg-white dark:bg-gray-900 shadow-md transform transition-transform ${
-          isDark ? 'ltr:translate-x-8 rtl:-translate-x-8' : 'ltr:translate-x-1 rtl:-translate-x-1'
-        }`}
+        className={`absolute top-1 w-6 h-6 rounded-full bg-white dark:bg-gray-900 shadow-md transition-all duration-200 ${knobPosition}`}
       >
         <div className="flex items-center justify-center h-full">
           {isDark ? (

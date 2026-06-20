@@ -2,6 +2,7 @@ import { Dish, Assignments, Totals } from '../types';
 
 /**
  * حساب المبالغ المستحقة على كل شخص بناءً على الأطباق المعينة.
+ * Builds a reverse index (dishId → people) for O(n) performance.
  */
 export const calculateTotals = (
   dishes: Dish[],
@@ -9,24 +10,35 @@ export const calculateTotals = (
   people: string[]
 ): Totals => {
   const totals: Totals = {};
+  const hasPerson = new Set(people);
 
-  people.forEach(person => {
+  // Build reverse index: dishId → assigned people
+  const dishToPeople = new Map<number, string[]>();
+  for (const [person, dishIds] of Object.entries(assignments)) {
+    if (!hasPerson.has(person)) continue;
+    for (const dishId of dishIds) {
+      if (!dishToPeople.has(dishId)) {
+        dishToPeople.set(dishId, []);
+      }
+      dishToPeople.get(dishId)!.push(person);
+    }
+  }
+
+  // Initialize totals
+  for (const person of people) {
     totals[person] = 0;
-  });
+  }
 
-  dishes.forEach(dish => {
-    const assignedPeople = Object.entries(assignments)
-      .filter(([_, dishIds]) => dishIds.includes(dish.id))
-      .map(([person]) => person);
-
-    if (assignedPeople.length === 0) return;
+  // Calculate shares
+  for (const dish of dishes) {
+    const assignedPeople = dishToPeople.get(dish.id);
+    if (!assignedPeople || assignedPeople.length === 0) continue;
 
     const costPerPerson = (dish.price * dish.quantity) / assignedPeople.length;
-
-    assignedPeople.forEach(person => {
+    for (const person of assignedPeople) {
       totals[person] += costPerPerson;
-    });
-  });
+    }
+  }
 
   return totals;
 };

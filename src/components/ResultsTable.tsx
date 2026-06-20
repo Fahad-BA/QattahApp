@@ -7,9 +7,7 @@ interface ResultsTableProps {
   dishes: Dish[];
   assignments: Assignments;
   totals: Totals;
-  onPrint?: () => void;
   onExportCSV?: (csvData: string) => void;
-  onShare?: (url: string) => void;
 }
 
 export const ResultsTable = ({

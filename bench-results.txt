@@ -1,0 +1,24 @@
+======================================
+Qattah App Performance Benchmark
+Host: http://localhost:3000
+Date: 2026-06-20 15:21:16 UTC
+Rounds: 10 per endpoint (with warm-up)
+======================================
+
+Endpoint                            Avg      Min      Max       Size   Transfer
+--------                            ---      ---      ---       ----   --------
+HTML                                1ms      1ms      1ms      3.5KB           
+JS-App(23KB)                        1ms      1ms      1ms     22.5KB           
+JS-Runtime(1KB)                     1ms      1ms      1ms       559B           
+JS-Icons(15KB)                      1ms      1ms      1ms     14.4KB           
+JS-Other(4KB)                       1ms      1ms      1ms      3.7KB           
+JS-React(177KB)                     1ms      1ms      2ms    173.6KB           
+CSS(28KB)                           1ms      1ms      2ms     26.0KB           
+manifest.webmanifest                1ms      1ms      1ms       870B           
+manifest.json                       1ms      1ms      1ms      1.3KB           
+robots.txt                          1ms      1ms      1ms        63B           
+sw.js                               1ms      1ms      1ms      2.6KB           
+registerSW.js                       1ms      1ms      1ms       134B           
+
+✅ ALL ENDPOINTS UNDER 50ms
+======================================
