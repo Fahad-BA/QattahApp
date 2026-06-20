@@ -36,7 +36,7 @@ export const DarkModeToggle = () => {
     >
       <div
         className={`absolute top-1 w-6 h-6 rounded-full bg-white dark:bg-gray-900 shadow-md transform transition-transform ${
-          isDark ? 'translate-x-8' : 'translate-x-1'
+          isDark ? 'ltr:translate-x-8 rtl:-translate-x-8' : 'ltr:translate-x-1 rtl:-translate-x-1'
         }`}
       >
         <div className="flex items-center justify-center h-full">

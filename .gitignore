@@ -217,3 +217,7 @@ qattah-final.service
 qattah-python.service
 qattah-robust.service
 qattah.service
+
+# Archive of dead code
+.archive/
+benchmark.sh

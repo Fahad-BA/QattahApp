@@ -50,7 +50,7 @@ export const PeopleList = ({
         <button
           onClick={handleAdd}
           disabled={!newPerson.trim() || people.length >= maxPeople}
-          className="btn-primary rounded-l-none flex items-center gap-2"
+          className="btn-primary rounded-r-none flex items-center gap-2"
           aria-label="إضافة شخص"
         >
           <FiUserPlus />
